@@ -114,33 +114,50 @@ class CabBookingWidget extends ConsumerWidget {
               controller: dropCityController,
             ),
             const SizedBox(height: 16),
-            _buildDateField(
-              label: "Pick-up Date",
-              hint: selectedDateFrom != null
-                  ? DateFormat('dd-MM-yyyy').format(selectedDateFrom!)
-                  : "DD-MM-YYYY",
-              icon: ImagePath.date,
-              onTap: () => _selectDate(context, ref, true),
-            ),
-            if (selectedTripType==1) ...[
-              const SizedBox(height: 16),
-              _buildDateField(
-                label: "Return Date",
-                hint: selectedDateTo != null
-                    ? DateFormat('dd-MM-yyyy').format(selectedDateTo!)
-                    : "DD-MM-YYYY",
-                icon: ImagePath.date,
-                onTap: () => _selectDate(context, ref, false),
-              ),
-            ],
-            const SizedBox(height: 16),
-            _buildDateField(
-              label: "Time",
-              hint: selectedTime != null
-                  ? selectedTime!.format(context)
-                  : "HH:MM",
-              icon: ImagePath.time,
-              onTap: () => _selectTime(context, ref),
+            selectedTripType==0 ? Column(
+              children: [
+                _buildDateField(
+                  label: "Pick-up Date",
+                  hint: selectedDateFrom != null
+                      ? DateFormat('dd-MM-yyyy').format(selectedDateFrom!)
+                      : "DD-MM-YYYY",
+                  icon: ImagePath.date,
+                  onTap: () => _selectDate(context, ref, true),
+                ),
+                const SizedBox(height: 16),
+                _buildDateField(
+                  label: "Time",
+                  hint: selectedTime != null
+                      ? selectedTime!.format(context)
+                      : "HH:MM",
+                  icon: ImagePath.time,
+                  onTap: () => _selectTime(context, ref),
+                ),
+              ],
+            ): Column(
+              children: [
+                _buildDateField(
+                  label: "Time",
+                  hint: selectedTime != null
+                      ? selectedTime!.format(context)
+                      : "HH:MM",
+                  icon: ImagePath.time,
+                  onTap: () => _selectTime(context, ref),
+                ),
+                const SizedBox(height: 16,),
+                _buildFromToDate(
+                    label1: "From Date",
+                    label2: "To Date",
+                    hint1: selectedDateFrom != null
+                      ? DateFormat('dd-MM-yyyy').format(selectedDateFrom!)
+                      : "DD-MM-YYYY",
+                    hint2: selectedDateTo != null
+                      ? DateFormat('dd-MM-yyyy').format(selectedDateTo!)
+                      : "DD-MM-YYYY",
+                    icon: ImagePath.date,
+                    onTap: () => _selectDate(context, ref, false),
+                ),
+              ],
             ),
           ],
         );
@@ -215,61 +232,65 @@ class CabBookingWidget extends ConsumerWidget {
     required String icon,
     required TextEditingController controller,
   }) {
-    return Container(
-      decoration:  BoxDecoration(
-        color: MyColors.lightGreen,
-        borderRadius: BorderRadius.circular(20)
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Image.asset(
-              icon,
-            height: 30,
-          ),
-          const SizedBox(width: 18),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10,),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: MyColors.primary
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration:  BoxDecoration(
+          color: MyColors.lightGreen,
+          borderRadius: BorderRadius.circular(20)
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            Image.asset(
+                icon,
+              height: 30,
+            ),
+            const SizedBox(width: 18),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10,),
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: MyColors.primary
+                    ),
                   ),
-                ),
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.zero,
-                    hintText: hint,
-                    hintStyle: TextStyle(
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.zero,
+                      hintText: hint,
+                      hintStyle: TextStyle(
+                        color: MyColors.hintColor,
+                        fontSize: 10
+                      ),
+                      filled: false,
+                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                    ),
+                    style: const TextStyle(
                       color: MyColors.hintColor,
+                      fontWeight: FontWeight.w400,
                       fontSize: 10
                     ),
-                    filled: false,
-                    border: InputBorder.none,
-                    fillColor: Colors.white,
                   ),
-                  style: const TextStyle(
-                    color: MyColors.hintColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 10
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.black),
-            onPressed: () {
-              controller.clear();
-            },
-          ),
-        ],
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.black),
+              onPressed: () {
+                controller.clear();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -280,42 +301,46 @@ class CabBookingWidget extends ConsumerWidget {
     required String icon,
     required VoidCallback onTap,
   }) {
-    return Container(
-      decoration:  BoxDecoration(
-          color: MyColors.lightGreen,
-          borderRadius: BorderRadius.circular(20)
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Image.asset(
-              icon,
-              height: 30,
-            ),
-            const SizedBox(width: 18),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      color: MyColors.primary
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration:  BoxDecoration(
+            color: MyColors.lightGreen,
+            borderRadius: BorderRadius.circular(20)
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: GestureDetector(
+          onTap: onTap,
+          child: Row(
+            children: [
+              Image.asset(
+                icon,
+                height: 30,
+              ),
+              const SizedBox(width: 18),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                        fontSize: 14,
+                        color: MyColors.primary
+                    ),
                   ),
-                ),
-                const SizedBox(height: 7,),
-                Text(
-                  hint,
-                  style: TextStyle(
-                      color: hint == "DD-MM-YYYY" || hint == "HH:MM" ? Colors.grey : Colors.black,
-                    fontSize: 12
+                  const SizedBox(height: 7,),
+                  Text(
+                    hint,
+                    style: TextStyle(
+                        color: hint == "DD-MM-YYYY" || hint == "HH:MM" ? Colors.grey : Colors.black,
+                      fontSize: 12
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -323,7 +348,7 @@ class CabBookingWidget extends ConsumerWidget {
 
   Widget _buildAirportType(WidgetRef ref, double width) {
     final selectedIndex = ref.watch(homeScreenProvider);
-    final options = ['One-way', 'Round Trip'];
+    final options = ['To The Airport', 'Form The Airport'];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -343,7 +368,7 @@ class CabBookingWidget extends ConsumerWidget {
               )
             ),
             height: 28,
-            width: width * 0.3,
+            width: width * 0.32,
             alignment: Alignment.center,
             child: Text(
               text,
@@ -356,6 +381,81 @@ class CabBookingWidget extends ConsumerWidget {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildFromToDate({
+    required String label1,
+    required String label2,
+    required String hint1,
+    required String hint2,
+    required String icon,
+    required VoidCallback onTap
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // From Date Column
+        InkWell(
+          onTap: onTap,
+          child: Column(
+            children: [
+              Text(
+                label1,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: MyColors.primary
+                ),
+              ),
+              const SizedBox(height: 7,),
+              Text(
+                hint1,
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: MyColors.lightGreen,
+            borderRadius: BorderRadius.circular(50)
+          ),
+          padding: EdgeInsets.all(10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset(
+              ImagePath.date
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: onTap,
+          child: Column(
+            children: [
+              Text(
+                label2,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: MyColors.primary
+                ),
+              ),
+              const SizedBox(height: 7,),
+              Text(
+                hint2,
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
