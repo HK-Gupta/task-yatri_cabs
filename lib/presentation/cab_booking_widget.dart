@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:yatri_cabs/config/assets_path.dart';
 import 'package:yatri_cabs/config/my_colors.dart';
+import 'package:yatri_cabs/presentation/map_screen.dart';
 import 'package:yatri_cabs/presentation/screens/home_screen.dart';
 
 // Define state providers for date and time
@@ -253,11 +255,16 @@ class CabBookingWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10,),
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: MyColors.primary
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=> MapScreen()));
+                    },
+                    child: Text(
+                      label,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: MyColors.primary
+                      ),
                     ),
                   ),
                   TextField(
